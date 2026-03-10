@@ -172,6 +172,13 @@ class WhisperTranscriber {
         apiKey: String,
         model: String
     ): Request {
+        val isOpenAIBackend = speechToTextBackend == context.getString(R.string.settings_option_openai_api)
+        val isWhisperAsrWebserviceBackend = speechToTextBackend == context.getString(R.string.settings_option_whisper_asr_webservice)
+        val isNvidiaNimBackend = speechToTextBackend == context.getString(R.string.settings_option_nvidia_nim)
+        val openAICompatibleLanguageCode = languageCode.takeIf {
+            it.isNotBlank() && !it.equals("auto", ignoreCase = true)
+        }
+
         // Please refer to the following for the endpoint/payload definitions:
         // OpenAI API:
         // - https://platform.openai.com/docs/api-reference/audio/createTranscription
@@ -203,37 +210,42 @@ class WhisperTranscriber {
             val formDataFilename = if (mediaType == "audio/ogg") "@audio.ogg" else "@audio.m4a"
             
             // Add file to payload
-            if (speechToTextBackend == context.getString(R.string.settings_option_openai_api) || 
-                speechToTextBackend == context.getString(R.string.settings_option_nvidia_nim)) {
+            if (isOpenAIBackend || isNvidiaNimBackend) {
                 addFormDataPart("file", formDataFilename, fileBody)
-            } else if (speechToTextBackend == context.getString(R.string.settings_option_whisper_asr_webservice)) {
+            } else if (isWhisperAsrWebserviceBackend) {
                 addFormDataPart("audio_file", formDataFilename, fileBody)
             }
             // Add backend-specific parameters to payload
-            if (speechToTextBackend == context.getString(R.string.settings_option_openai_api)) {
+            if (isOpenAIBackend) {
                 addFormDataPart("model", model)
+                if (openAICompatibleLanguageCode != null) {
+                    addFormDataPart("language", openAICompatibleLanguageCode)
+                }
                 addFormDataPart("response_format", "text")
             }
-            if (speechToTextBackend == context.getString(R.string.settings_option_nvidia_nim)) {
-                addFormDataPart("language", languageCode)
+            if (isNvidiaNimBackend) {
+                if (model.isNotBlank()) {
+                    addFormDataPart("model", model)
+                }
+                if (languageCode.isNotBlank()) {
+                    addFormDataPart("language", languageCode)
+                }
                 addFormDataPart("response_format", "text")
             }
         }.build()
 
         val requestHeaders: Headers = Headers.Builder().apply {
-            if (speechToTextBackend == context.getString(R.string.settings_option_openai_api)) {
+            if (isOpenAIBackend) {
                 // Foolproof message
                 if (apiKey == "") {
                     throw Exception(context.getString(R.string.error_apikey_unset))
                 }
                 add("Authorization", "Bearer $apiKey")
             }
-            add("Content-Type", "multipart/form-data")
         }.build()
 
         // Build URL with endpoint-specific parameters
         val url = when (speechToTextBackend) {
-            context.getString(R.string.settings_option_openai_api),
             context.getString(R.string.settings_option_whisper_asr_webservice) -> {
                 "$endpoint?encode=true&task=transcribe&language=$languageCode&word_timestamps=false&output=txt"
             }

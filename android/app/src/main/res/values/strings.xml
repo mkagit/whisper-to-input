@@ -28,7 +28,7 @@
     <string name="whisper_to_input_settings_title">Whisper To Input Settings</string>
     <string name="settings_btn_apply">Apply</string>
     <string name="settings_speech_to_text_backend">Speech to Text Backend</string>
-    <string name="settings_speech_to_text_backend_desc">Use the official OpenAI API, Whisper ASR Webservice, or NVIDIA NIM backend.</string>
+    <string name="settings_speech_to_text_backend_desc">Use an OpenAI-compatible API, Whisper ASR Webservice, or NVIDIA NIM backend.</string>
     <string name="settings_option_openai_api">OpenAI API</string>
     <string name="settings_option_openai_api_default_endpoint">https://api.openai.com/v1/audio/transcriptions</string>
     <string name="settings_option_openai_api_default_model">whisper-1</string>
@@ -52,8 +52,8 @@
     <string name="settings_language_code_desc">The language code to be included in the request payload (e.g., en, zh).</string>
     <string name="settings_language_code_hint">Enter Language Code (e.g., en, zh)</string>
     <string name="settings_api_key">API Key</string>
-    <string name="settings_api_key_desc">The official OpenAI API Key to be used in requests.</string>
-    <string name="settings_api_key_hint">Enter OpenAI API Key…</string>
+    <string name="settings_api_key_desc">The API key to be used in requests for OpenAI-compatible backends.</string>
+    <string name="settings_api_key_hint">Enter API key…</string>
     <string name="settings_model">Model</string>
     <string name="settings_model_desc">The model to use for transcription (e.g., whisper-1).</string>
     <string name="settings_model_hint">Enter model name (e.g., whisper-1)</string>

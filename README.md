@@ -2,7 +2,7 @@
 
 Whisper To Input, also known by its Mandarin name 輕聲細語輸入法, is an Android keyboard that performs speech-to-text (STT/ASR) with OpenAI Whisper and input the recognized text; Supports English, Chinese, Japanese, etc. and even mixed languages and Taiwanese.
 
-The STT/ASR backend service can be either [OpenAI API](https://platform.openai.com/docs/guides/speech-to-text), [Whisper ASR Webservice](https://github.com/ahmetoner/whisper-asr-webservice), or [NVIDIA NIM](https://build.nvidia.com/openai/whisper-large-v3) (based on [NVIDIA Riva](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html)).
+The STT/ASR backend service can be either an [OpenAI-compatible API](https://platform.openai.com/docs/guides/speech-to-text), [Whisper ASR Webservice](https://github.com/ahmetoner/whisper-asr-webservice), or [NVIDIA NIM](https://build.nvidia.com/openai/whisper-large-v3) (based on [NVIDIA Riva](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html)).
 
 ## Installation
 
@@ -24,7 +24,7 @@ The STT/ASR backend service can be either [OpenAI API](https://platform.openai.c
    <img src='docs/images/06-record-audio-permission.jpg' width='200'>
    <!-- TODO: Add send notification permission screenshot -->
 
-5. Go to the app settings page and enter your configuration. You have 2 choices, either using the official OpenAI API with [your API key](https://platform.openai.com/api-keys) or self-host a [Whisper ASR Webservice](https://github.com/ahmetoner/whisper-asr-webservice). For more information, see the [Services](#services) section.
+5. Go to the app settings page and enter your configuration. You can use an OpenAI-compatible API with your API key, self-host a [Whisper ASR Webservice](https://github.com/ahmetoner/whisper-asr-webservice), or run NVIDIA NIM locally. For more information, see the [Services](#services) section.
 
    <img src='docs/images/08-app-settings-page.jpg' width='200'>
 
@@ -36,6 +36,14 @@ The STT/ASR backend service can be either [OpenAI API](https://platform.openai.c
      Endpoint:                https://api.openai.com/v1/audio/transcriptions
      API Key:                 sk-...xxxx
      Model:                   whisper-1
+     Language Code:
+     ```
+   - Groq (OpenAI-compatible):
+     ```
+     Speech to Text Backend:  OpenAI API
+     Endpoint:                https://api.groq.com/openai/v1/audio/transcriptions
+     API Key:                 gsk_...xxxx
+     Model:                   whisper-large-v3-turbo
      Language Code:
      ```
    - Whisper ASR Webservice:
@@ -90,11 +98,16 @@ The STT/ASR backend service can be either [OpenAI API](https://platform.openai.c
 
 Either one of the following service can be used as the STT/ASR backend.
 
-### OpenAI API
+### OpenAI-compatible APIs
 
-Requires an [OpenAI API key](https://platform.openai.com/api-keys).
+The `OpenAI API` backend works with the official OpenAI endpoint and compatible providers that implement the same multipart transcription API.
 
-See the [documentation](https://platform.openai.com/docs/guides/speech-to-text?lang=curl) for more info.
+Examples:
+
+- OpenAI: `https://api.openai.com/v1/audio/transcriptions` with model `whisper-1`
+- Groq: `https://api.groq.com/openai/v1/audio/transcriptions` with model `whisper-large-v3` or `whisper-large-v3-turbo`
+
+See the provider documentation for supported model names and limits.
 
 ### Whisper ASR Webservice
 
